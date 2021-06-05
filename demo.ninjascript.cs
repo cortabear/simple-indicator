@@ -53,7 +53,14 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 		protected override void OnBarUpdate()
 		{
-			//Add your custom indicator logic here.
+			// Compute the Stochastic Cross Bias ("Long", "Short" or "No Bias").
+
+		  // Compute the Oscillator Bias
+
+		  // With that bias, we will check to see if both bias agree.
+		  // If "Long" print a long signal.
+
+		  // If "Short" print a short signal.
 		}
 
 		#region Properties
