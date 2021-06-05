@@ -45,13 +45,18 @@ namespace NinjaTrader.NinjaScript.Indicators
 				IsSuspendedWhileInactive					= true;
 				AddPlot(new Stroke(Brushes.SpringGreen, 2), PlotStyle.Bar, "Long");
 				AddPlot(new Stroke(Brushes.HotPink, 2), PlotStyle.Bar, "Short");
+
+				// Make plots larger
+				Plots[0].AutoWidth = true;
+				Plots[1].AutoWidth = true;
+
 			}
 			else if (State == State.Configure)
 			{
 			}
 		}
 
-    protected override void OnBarUpdate()
+		protected override void OnBarUpdate()
 		{
 
 			// Compute the Stochastic Cross Bias ("Long", "Short" or "No Bias").
@@ -70,6 +75,15 @@ namespace NinjaTrader.NinjaScript.Indicators
 				ShortSignal();
 			}
 
+		}
+
+		// SIGNALS
+		private void LongSignal(){
+			Values[0][0] = 1;
+		}
+
+		private void ShortSignal(){
+			Values[1][0] = -1;
 		}
 
 		#region Properties
