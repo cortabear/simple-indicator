@@ -26,6 +26,31 @@ namespace NinjaTrader.NinjaScript.Indicators
 {
 	public class Demo : Indicator
 	{
+
+		// PUBLIC PROPERTIES
+		public double LowerThreshold {get; set;}
+		public double UpperThreshold {get; set;}
+		public double OscLowerThreshold {get; set;}
+		public double OscUpperThreshold {get; set;}
+
+		// PRIVATE
+		private ISeries<double> _Oscillator;
+
+		// STOCHASTICS
+		protected Stochastics Stoch {
+			get {
+				return Stochastics(7,14,3); // 'period D', 'period K' and 'smooth'
+			}
+		}
+
+		// I SERIES
+		protected ISeries<double> Oscillator {
+			get {
+				return _Oscillator;
+			}
+		}
+
+		// STATES
 		protected override void OnStateChange()
 		{
 			if (State == State.SetDefaults)
@@ -48,12 +73,43 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 				// Make plots larger
 				Plots[0].AutoWidth = true;
-				Plots[1].AutoWidth = true; 
+				Plots[1].AutoWidth = true;
 
 			}
 			else if (State == State.Configure)
 			{
 			}
+		}
+
+		// STOCHASTIC CROSS
+		protected MarketPosition StochCross(){
+
+			// LONG BIAS: STOCHASTIC CROSS
+			if(CrossAbove(Stoch.D, LowerThreshold, 1)){
+				return MarketPosition.Long;
+
+			// SHORT BIAS: STOCHASTIC CROSS
+			}else if(CrossBelow(Stoch.D, UpperThreshold, 1)){
+				return MarketPosition.Short;
+			}
+
+			// FLAT BIAS: STOCHASTIC CROSS
+			return MarketPosition.Flat;
+		}
+
+		// OSCILlATOR
+		protected MarketPosition OscBias(){
+			// LONG BIAS
+			if( Oscillator[0] < OscLowerThreshold ){
+				return MarketPosition.Long;
+
+			// SHORT BIAS
+			}else if( Oscillator[0] > OscUpperThreshold ){
+				return MarketPosition.Short;
+			}
+
+			// FLAT BIAS
+			return MarketPosition.Flat;
 		}
 
 		protected override void OnBarUpdate()
