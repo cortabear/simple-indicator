@@ -28,10 +28,18 @@ namespace NinjaTrader.NinjaScript.Indicators
 	{
 
 		// PUBLIC PROPERTIES
+		public enum EOscChoice {
+			McClellan,
+			PPO
+		}
+
+		public EOscChoice OscChoice { get; set; }
 		public double LowerThreshold {get; set;}
 		public double UpperThreshold {get; set;}
 		public double OscLowerThreshold {get; set;}
 		public double OscUpperThreshold {get; set;}
+
+		public bool DebugMode { get; set; } // DEGUB SWITCH
 
 		// PRIVATE
 		private ISeries<double> _Oscillator;
@@ -46,6 +54,21 @@ namespace NinjaTrader.NinjaScript.Indicators
 		// I SERIES
 		protected ISeries<double> Oscillator {
 			get {
+
+				if( _Oscillator == null ){
+
+					// SWITCH
+					switch(OscChoice){
+						case EOscChoice.McClellan:
+							_Oscillator = McClellanOscillator(19, 39);
+							break;
+
+						case EOscChoice.PPO:
+							_Oscillator = PPO(12,26,9);
+							break;
+					}
+
+				}
 				return _Oscillator;
 			}
 		}
@@ -78,6 +101,16 @@ namespace NinjaTrader.NinjaScript.Indicators
 			}
 			else if (State == State.Configure)
 			{
+				// INITIALIZE
+				InitializeIndicators();
+			}
+		}
+
+		// INITALIZE INDICATORS
+		protected void InitializeIndicators(){
+			if( OscChoice == EOscChoice.McClellan ){
+				AddDataSeries( "^ADV" );
+				AddDataSeries( "^DECL" );
 			}
 		}
 
@@ -101,10 +134,14 @@ namespace NinjaTrader.NinjaScript.Indicators
 		protected MarketPosition OscBias(){
 			// LONG BIAS
 			if( Oscillator[0] < OscLowerThreshold ){
+
+				BackBrushes[0] = Brushes.LightGreen; // Paint the background
 				return MarketPosition.Long;
 
 			// SHORT BIAS
 			}else if( Oscillator[0] > OscUpperThreshold ){
+
+				BackBrushes[0] = Brushes.LightCyan; // Paint the background
 				return MarketPosition.Short;
 			}
 
@@ -117,20 +154,34 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 			// Compute the Stochastic Cross Bias ("Long", "Short" or "No Bias").
 			MarketPosition stoch = StochCross();
+			DebugOutput(1);
 
 			// Compute the Oscillator Bias
 			MarketPosition osc = OscBias();
+			DebugOutput(2);
 
 			// With that bias, we will check to see if both bias agree.
 			// If "Long" print a long signal.
 			if (osc == MarketPosition.Long && stoch == MarketPosition.Long) {
 				LongSignal();
+				DebugOutput(3);
 
 			// If "Short" print a short signal.
 			}else if (osc == MarketPosition.Short && stoch == MarketPosition.Short) {
 				ShortSignal();
+				DebugOutput(4);
 			}
 
+		}
+
+		// DEBUGGING
+		private void DebugOutput(object obj){
+
+			if( !DebugMode ){
+				return;
+			}
+
+			Print(obj);
 		}
 
 		// SIGNALS
