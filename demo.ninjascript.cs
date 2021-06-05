@@ -48,7 +48,7 @@ namespace NinjaTrader.NinjaScript.Indicators
 
 				// Make plots larger
 				Plots[0].AutoWidth = true;
-				Plots[1].AutoWidth = true;
+				Plots[1].AutoWidth = true; 
 
 			}
 			else if (State == State.Configure)
