@@ -55,3 +55,34 @@ protected override void OnBarUpdate()
 
 }
 ```
+
+## Public Properties
+
+---  
+
+## Protected
+
+---  
+
+## State Defaults  
+
+---   
+
+## Signals  
+Set and output bar values to a certain numeric value. There are two different plots ('Long' and 'Short') which means there are two objects in the values Array. '0' represents a 'Long' signal and '1' represents a 'Short' signal.   
+
+### Long Signal  
+Take this numeric value and set it to "1". This represents a "Long" signal.  
+```C
+private void LongSignal(){
+  Values[0][0] = 1;
+}
+```
+
+### Short Signal  
+Take this numeric value and set it to "1". This represents a "Long" signal.
+```C
+private void ShortSignal(){
+  Values[1][0] = -1;
+}
+```
