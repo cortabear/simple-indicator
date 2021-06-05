@@ -61,12 +61,36 @@ protected override void OnBarUpdate()
 ---  
 
 ## Protected
+Private protected properties that echo the values of the Stochastics. In this approach there is one place designated for "spitting out" the values needed.
 
 ---  
 
 ## State Defaults  
+We will make the plots a little larger by turning on the "AutoWidth". Otherwise it will make our indicators very hard to see.  
+```C
+
+Plots[0].AutoWidth = true;
+Plots[1].AutoWidth = true;
+
+```
 
 ---   
+
+## Stochastic Cross  
+```C
+
+
+```
+
+---  
+
+## Oscillator Cross  
+```C
+
+
+```
+
+---  
 
 ## Signals  
 Set and output bar values to a certain numeric value. There are two different plots ('Long' and 'Short') which means there are two objects in the values Array. '0' represents a 'Long' signal and '1' represents a 'Short' signal.   
@@ -80,7 +104,7 @@ private void LongSignal(){
 ```
 
 ### Short Signal  
-Take this numeric value and set it to "1". This represents a "Long" signal.
+Take this numeric value and set it to "-1". This represents a "Short" signal.
 ```C
 private void ShortSignal(){
   Values[1][0] = -1;
