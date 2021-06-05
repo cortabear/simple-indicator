@@ -34,14 +34,24 @@ protected override void OnBarUpdate() {
 Now that we have mapped out what we want to accomplish we can now begin to [scaffold](https://en.wikipedia.org/wiki/Scaffold_(programming)) the code for our indicator. For best practices we want to always use what is available to us inside of NinjaTrader. In this case, instead of declaring our own enumerated enumeration we will use what is already out there. Thus the Stochastic Cross. Re-use as much as possible.
 
 ```C
-protected override void OnBarUpdate() {
+protected override void OnBarUpdate()
+{
+
   // Compute the Stochastic Cross Bias ("Long", "Short" or "No Bias").
+  MarketPosition stoch = StochCross();
 
   // Compute the Oscillator Bias
+  MarketPosition osc = OscBias();
 
   // With that bias, we will check to see if both bias agree.
   // If "Long" print a long signal.
+  if (osc == MarketPosition.Long && stoch == MarketPosition.Long) {
+    LongSignal();
 
   // If "Short" print a short signal.
+  }else if (osc == MarketPosition.Short && stoch == MarketPosition.Short) {
+    ShortSignal();
+  }
+
 }
 ```

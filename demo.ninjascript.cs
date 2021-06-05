@@ -51,16 +51,25 @@ namespace NinjaTrader.NinjaScript.Indicators
 			}
 		}
 
-		protected override void OnBarUpdate()
+    protected override void OnBarUpdate()
 		{
+
 			// Compute the Stochastic Cross Bias ("Long", "Short" or "No Bias").
+			MarketPosition stoch = StochCross();
 
-		  // Compute the Oscillator Bias
+			// Compute the Oscillator Bias
+			MarketPosition osc = OscBias();
 
-		  // With that bias, we will check to see if both bias agree.
-		  // If "Long" print a long signal.
+			// With that bias, we will check to see if both bias agree.
+			// If "Long" print a long signal.
+			if (osc == MarketPosition.Long && stoch == MarketPosition.Long) {
+				LongSignal();
 
-		  // If "Short" print a short signal.
+			// If "Short" print a short signal.
+			}else if (osc == MarketPosition.Short && stoch == MarketPosition.Short) {
+				ShortSignal();
+			}
+
 		}
 
 		#region Properties
